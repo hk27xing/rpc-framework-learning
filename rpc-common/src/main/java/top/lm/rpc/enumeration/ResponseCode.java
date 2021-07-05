@@ -3,6 +3,10 @@ package top.lm.rpc.enumeration;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/**
+ * @Description 方法调用的响应状态码
+ * @author hk27xing
+ * */
 @AllArgsConstructor
 @Getter
 public enum ResponseCode {

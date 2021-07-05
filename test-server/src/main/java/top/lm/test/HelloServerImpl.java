@@ -5,6 +5,10 @@ import org.slf4j.LoggerFactory;
 import top.lm.rpc.api.HelloObject;
 import top.lm.rpc.api.HelloService;
 
+/**
+ * @Description HelloService 接口的实现类
+ * @author hk27xing
+ * */
 public class HelloServerImpl implements HelloService {
 
     private static final Logger logger = LoggerFactory.getLogger(HelloServerImpl.class);

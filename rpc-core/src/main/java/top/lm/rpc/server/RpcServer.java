@@ -8,6 +8,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.*;
 
+/**
+ * @Description 远程方法调用的服务端
+ * @author hk27xing
+ * */
 public class RpcServer {
 
     private final ExecutorService threadPool;
@@ -27,11 +31,12 @@ public class RpcServer {
             logger.info("服务器正在启动...");
             Socket socket;
             while ((socket = serverSocket.accept()) != null) {
-                logger.info("客户端连接! IP为: " + socket.getInetAddress());
-                threadPool.execute(new WorkThread(socket, service));
+                logger.info("客户端连接! IP为: " + socket.getInetAddress() + ":" + socket.getLocalPort());
+                threadPool.execute(new RequestHandler(socket, service));
             }
         } catch (IOException e) {
             logger.error("连接时有错误: ", e);
         }
     }
+
 }

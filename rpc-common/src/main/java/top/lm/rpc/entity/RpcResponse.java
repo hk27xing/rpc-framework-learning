@@ -6,13 +6,22 @@ import top.lm.rpc.enumeration.ResponseCode;
 
 import java.io.Serializable;
 
+/**
+ * @Description 生产者执行完成或出错后向消费者返回的结果对象
+ * @author hk27xing
+ * */
 @Data
 @NoArgsConstructor
 public class RpcResponse<T> implements Serializable {
 
-    private Integer statusCode;     // 相应状态码
-    private String message;         // 相应状态补充信息
-    private T data;                 // 相应数据
+    /* 相应状态码 */
+    private Integer statusCode;
+
+    /* 相应状态补充信息 */
+    private String message;
+
+    /* 相应数据 */
+    private T data;
 
     public static <T> RpcResponse<T> success(T data) {
         RpcResponse<T> response = new RpcResponse<>();

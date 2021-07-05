@@ -4,6 +4,10 @@ import top.lm.rpc.api.HelloObject;
 import top.lm.rpc.api.HelloService;
 import top.lm.rpc.client.RpcClientProxy;
 
+/**
+ * @Description 客户端测试
+ * @author hk27xing
+ * */
 public class TestClient {
     public static void main(String[] args) {
         RpcClientProxy proxy = new RpcClientProxy("127.0.0.1", 9000);
