@@ -1,7 +1,9 @@
-package top.lm.rpc.server;
+package top.lm.rpc.socket.server;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.lm.rpc.RequestHandler;
+import top.lm.rpc.RpcServer;
 import top.lm.rpc.registry.ServiceRegistry;
 
 import java.io.IOException;
@@ -10,12 +12,12 @@ import java.net.Socket;
 import java.util.concurrent.*;
 
 /**
- * @Description 远程方法调用的服务端
+ * @Description Socket 传输方式 远程方法调用的服务端
  * @author hk27xing
  * */
-public class RpcServer {
+public class SocketServer implements RpcServer {
 
-    private static final Logger logger = LoggerFactory.getLogger(RpcServer.class);
+    private static final Logger logger = LoggerFactory.getLogger(SocketServer.class);
 
     private static final int CORE_POOL_SIZE          = 5;
     private static final int MAXMUM_POOL_SIZE        = 50;
@@ -25,7 +27,7 @@ public class RpcServer {
     private RequestHandler requestHandler = new RequestHandler();
     private final ServiceRegistry serviceRegistry;
 
-    public RpcServer(ServiceRegistry serviceRegistry) {
+    public SocketServer(ServiceRegistry serviceRegistry) {
         this.serviceRegistry                 = serviceRegistry;
 
         BlockingQueue<Runnable> workingQueue = new ArrayBlockingQueue<>(BLOCKING_QUEUE_CAPACITY);
@@ -38,6 +40,7 @@ public class RpcServer {
                                             threadFactory);
     }
 
+    @Override
     public void start(int port) {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             logger.info("服务器启动...");

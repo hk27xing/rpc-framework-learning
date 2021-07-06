@@ -11,8 +11,9 @@ import java.io.Serializable;
  * @author hk27xing
  * */
 @Data
-@NoArgsConstructor
 public class RpcResponse<T> implements Serializable {
+
+    public RpcResponse() {}
 
     /* 相应状态码 */
     private Integer statusCode;
