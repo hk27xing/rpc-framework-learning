@@ -14,6 +14,7 @@ import top.lm.rpc.codec.CommonEncoder;
 import top.lm.rpc.entity.RpcRequest;
 import top.lm.rpc.entity.RpcResponse;
 import top.lm.rpc.serializer.JsonSerializer;
+import top.lm.rpc.serializer.KryoSerializer;
 
 /**
  * @author hk27xing
@@ -44,7 +45,7 @@ public class NettyClient implements RpcClient {
                      protected void initChannel(SocketChannel socketChannel) throws Exception {
                          ChannelPipeline pipeline = socketChannel.pipeline();
                          pipeline.addLast(new CommonDecoder())
-                                 .addLast(new CommonEncoder(new JsonSerializer()))
+                                 .addLast(new CommonEncoder(new KryoSerializer()))
                                  .addLast(new NettyClientHandler());
                      }
                  });
@@ -67,6 +68,7 @@ public class NettyClient implements RpcClient {
                 });
 
                 channel.closeFuture().sync();
+                /* 通过 AttributeKey 的方式阻塞获得全局可见的返回结果 */
                 AttributeKey<RpcResponse> key = AttributeKey.valueOf("rpcResponse");
                 RpcResponse rpcResponse = channel.attr(key).get();
                 return rpcResponse.getData();

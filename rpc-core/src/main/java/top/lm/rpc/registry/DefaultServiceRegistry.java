@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author hk27xing
- * @Description **
+ * @Description 默认的服务注册表
  * @createTime 2021/7/5 19:50
  */
 public class DefaultServiceRegistry implements ServiceRegistry{

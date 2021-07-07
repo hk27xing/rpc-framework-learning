@@ -51,7 +51,10 @@ public class JsonSerializer implements CommonSerializer{
         return SerializerCode.valueOf("JSON").getCode();
     }
 
-    /* 重新判断反序列化后的元素是否是原示例类型 */
+    /**
+     * 使用 JSON 序列化 Object 对象，无法保证反序列化后仍然为原实例类型
+     * 重新判断反序列化后的元素是否是原示例类型, 避免反序列化出错
+     */
     private Object handleRequest(Object obj) throws IOException {
         RpcRequest rpcRequest = (RpcRequest) obj;
         for (int i = 0; i < rpcRequest.getParameters().length; i++) {
