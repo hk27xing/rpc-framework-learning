@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.lm.rpc.entity.RpcRequest;
 import top.lm.rpc.enumeration.SerializerCode;
+import top.lm.rpc.exception.SerializeException;
 
 import java.io.IOException;
 
@@ -26,8 +27,7 @@ public class JsonSerializer implements CommonSerializer{
             return objectMapper.writeValueAsBytes(obj);
         } catch (JsonProcessingException e) {
             logger.error("序列化时有错误发生: {}", e.getMessage());
-            e.printStackTrace();
-            return null;
+            throw new SerializeException("序列化时有错误发生");
         }
     }
 
@@ -41,8 +41,7 @@ public class JsonSerializer implements CommonSerializer{
             return obj;
         } catch (IOException e) {
             logger.error("反序列化时有错误发生: {}", e.getMessage());
-            e.printStackTrace();
-            return null;
+            throw new SerializeException("反序列化时有错误发生");
         }
     }
 

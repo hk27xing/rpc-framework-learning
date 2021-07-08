@@ -13,8 +13,6 @@ import java.io.Serializable;
 @Data
 public class RpcResponse<T> implements Serializable {
 
-    public RpcResponse() {}
-
     /* 相应状态码 */
     private Integer statusCode;
 
@@ -23,6 +21,8 @@ public class RpcResponse<T> implements Serializable {
 
     /* 相应数据 */
     private T data;
+
+    public RpcResponse() {}
 
     public static <T> RpcResponse<T> success(T data) {
         RpcResponse<T> response = new RpcResponse<>();
