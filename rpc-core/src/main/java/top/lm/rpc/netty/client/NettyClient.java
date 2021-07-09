@@ -18,6 +18,7 @@ import top.lm.rpc.exception.RpcException;
 import top.lm.rpc.serializer.CommonSerializer;
 import top.lm.rpc.serializer.JsonSerializer;
 import top.lm.rpc.serializer.KryoSerializer;
+import top.lm.rpc.util.RpcMessageChecker;
 
 /**
  * @author hk27xing
@@ -80,8 +81,9 @@ public class NettyClient implements RpcClient {
 
                 channel.closeFuture().sync();
                 /* 通过 AttributeKey 的方式阻塞获得全局可见的返回结果 */
-                AttributeKey<RpcResponse> key = AttributeKey.valueOf("rpcResponse");
+                AttributeKey<RpcResponse> key = AttributeKey.valueOf("rpcResponse" + rpcRequest.getRequestId());
                 RpcResponse rpcResponse = channel.attr(key).get();
+                RpcMessageChecker.check(rpcRequest, rpcResponse);
                 return rpcResponse.getData();
             }
         } catch (InterruptedException e) {
