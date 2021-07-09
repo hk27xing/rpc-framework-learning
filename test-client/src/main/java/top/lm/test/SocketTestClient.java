@@ -3,6 +3,8 @@ package top.lm.test;
 import top.lm.rpc.RpcClientProxy;
 import top.lm.rpc.api.HelloObject;
 import top.lm.rpc.api.HelloService;
+import top.lm.rpc.serializer.HessianSerializer;
+import top.lm.rpc.serializer.KryoSerializer;
 import top.lm.rpc.socket.client.SocketClient;
 
 /**
@@ -12,6 +14,8 @@ import top.lm.rpc.socket.client.SocketClient;
 public class SocketTestClient {
     public static void main(String[] args) {
         SocketClient client       = new SocketClient("127.0.0.1", 9000);
+        client.setSerializer(new HessianSerializer());
+
         RpcClientProxy proxy      = new RpcClientProxy(client);
         HelloService helloService = proxy.getProxy(HelloService.class);
         HelloObject object        = new HelloObject(12, "Hello World!");

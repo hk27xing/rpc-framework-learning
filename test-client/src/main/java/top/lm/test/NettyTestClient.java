@@ -5,6 +5,7 @@ import top.lm.rpc.RpcClientProxy;
 import top.lm.rpc.api.HelloObject;
 import top.lm.rpc.api.HelloService;
 import top.lm.rpc.netty.client.NettyClient;
+import top.lm.rpc.serializer.KryoSerializer;
 
 /**
  * @author hk27xing
@@ -14,6 +15,8 @@ import top.lm.rpc.netty.client.NettyClient;
 public class NettyTestClient {
     public static void main(String[] args) {
         RpcClient client              = new NettyClient("127.0.0.1", 9999);
+        client.setSerializer(new KryoSerializer());
+
         RpcClientProxy rpcClientProxy = new RpcClientProxy(client);
         HelloService helloService     = rpcClientProxy.getProxy(HelloService.class);
         HelloObject object            = new HelloObject(12, "Hello World!");
