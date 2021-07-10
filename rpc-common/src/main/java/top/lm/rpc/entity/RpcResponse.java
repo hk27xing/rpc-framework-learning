@@ -11,6 +11,7 @@ import java.io.Serializable;
  * @author hk27xing
  * */
 @Data
+@NoArgsConstructor
 public class RpcResponse<T> implements Serializable {
 
     /* 请求号 */
@@ -24,8 +25,6 @@ public class RpcResponse<T> implements Serializable {
 
     /* 相应数据 */
     private T data;
-
-    public RpcResponse() {}
 
     public static <T> RpcResponse<T> success(T data, String requestId) {
         RpcResponse<T> response = new RpcResponse<>();

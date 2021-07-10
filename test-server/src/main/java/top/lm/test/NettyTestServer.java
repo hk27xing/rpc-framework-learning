@@ -5,6 +5,7 @@ import top.lm.rpc.netty.server.NettyServer;
 import top.lm.rpc.registry.DefaultServiceRegistry;
 import top.lm.rpc.registry.ServiceRegistry;
 import top.lm.rpc.serializer.KryoSerializer;
+import top.lm.rpc.serializer.ProtobufSerializer;
 
 /**
  * @author hk27xing
@@ -18,7 +19,7 @@ public class NettyTestServer {
 
         registry.registry(helloService);
         NettyServer server = new NettyServer();
-        server.setSerializer(new KryoSerializer());
+        server.setSerializer(new ProtobufSerializer());
         server.start(9999);
     }
 }
