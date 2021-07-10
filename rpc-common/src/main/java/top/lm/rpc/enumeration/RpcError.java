@@ -19,7 +19,8 @@ public enum RpcError {
     UNKNOWN_SERIALIZER("不识别的序列化"),
     UNKNOWN_PACKAGE_TYPE("不识别的数据包类型"),
     SERIALIZER_NOT_FOUND("找不到序列化器"),
-    RESPONSE_NOT_MATCH("响应和请求号不匹配");
+    RESPONSE_NOT_MATCHED("响应和请求号不匹配"),
+    CLIENT_CONNECTION_FAILURE("客户端连接失败");
 
     private final String message;
 

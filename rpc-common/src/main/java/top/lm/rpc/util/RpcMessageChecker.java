@@ -29,7 +29,7 @@ public class RpcMessageChecker {
 
         if (!rpcRequest.getRequestId().equals(rpcResponse.getRequestId())) {
             logger.error("调用服务失败, serviceName:{},RpcResponse:{}", rpcRequest.getInterfaceName(), rpcResponse);
-            throw new RpcException(RpcError.RESPONSE_NOT_MATCH,
+            throw new RpcException(RpcError.RESPONSE_NOT_MATCHED,
                     INTERFACE_NAME + ":" + rpcRequest.getInterfaceName());
         }
 

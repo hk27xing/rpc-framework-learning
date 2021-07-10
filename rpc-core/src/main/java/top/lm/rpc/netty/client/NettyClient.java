@@ -20,6 +20,9 @@ import top.lm.rpc.serializer.JsonSerializer;
 import top.lm.rpc.serializer.KryoSerializer;
 import top.lm.rpc.util.RpcMessageChecker;
 
+import java.net.InetSocketAddress;
+import java.util.concurrent.atomic.AtomicReference;
+
 /**
  * @author hk27xing
  * @Description 用 netty 实现的 NIO 方式的客户端类
@@ -55,22 +58,11 @@ public class NettyClient implements RpcClient {
             throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
         }
 
-        bootstrap.handler(new ChannelInitializer<SocketChannel>() {
-            @Override
-            protected void initChannel(SocketChannel ch) {
-                ChannelPipeline pipeline = ch.pipeline();
-                pipeline.addLast(new CommonDecoder())
-                        .addLast(new CommonEncoder(serializer))
-                        .addLast(new NettyClientHandler());
-            }
-        });
-
+        AtomicReference<Object> result = new AtomicReference<>(null);
         try {
-            ChannelFuture future = bootstrap.connect(host, port).sync();
-            logger.info("客户端连接到服务器: {}:{}", host, port);
-            Channel channel = future.channel();
+            Channel channel = ChannelProvider.get(new InetSocketAddress(host, port), serializer);
 
-            if (channel != null) {
+            if (channel.isActive()) {
                 channel.writeAndFlush(rpcRequest).addListener(f -> {
                     if (f.isSuccess()) {
                         logger.info(String.format("客户端发送信息: %s", rpcRequest.toString()));
@@ -84,12 +76,14 @@ public class NettyClient implements RpcClient {
                 AttributeKey<RpcResponse> key = AttributeKey.valueOf("rpcResponse" + rpcRequest.getRequestId());
                 RpcResponse rpcResponse = channel.attr(key).get();
                 RpcMessageChecker.check(rpcRequest, rpcResponse);
-                return rpcResponse.getData();
+                result.set(rpcResponse.getData());
+            } else {
+                System.exit(0);
             }
         } catch (InterruptedException e) {
             logger.error("发送消息时有错误发生: ", e);
         }
-        return null;
+        return result.get();
     }
 
     @Override
