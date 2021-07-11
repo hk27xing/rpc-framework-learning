@@ -1,11 +1,10 @@
 package top.lm.test;
 
 import top.lm.rpc.api.HelloService;
-import top.lm.rpc.registry.DefaultServiceRegistry;
+import top.lm.rpc.provider.ServiceProviderImpl;
 import top.lm.rpc.registry.ServiceRegistry;
-import top.lm.rpc.serializer.HessianSerializer;
 import top.lm.rpc.serializer.KryoSerializer;
-import top.lm.rpc.socket.server.SocketServer;
+import top.lm.rpc.transport.socket.server.SocketServer;
 
 /**
  * @Description 服务端测试
@@ -14,11 +13,8 @@ import top.lm.rpc.socket.server.SocketServer;
 public class SocketTestServer {
     public static void main(String[] args) {
         HelloService helloService       = new HelloServerImpl();
-        ServiceRegistry serviceRegistry = new DefaultServiceRegistry();
-
-        serviceRegistry.registry(helloService);
-        SocketServer socketServer = new SocketServer(serviceRegistry);
+        SocketServer socketServer = new SocketServer("127.0.0.1", 9998);
         socketServer.setSerializer(new KryoSerializer());
-        socketServer.start(9000);
+        socketServer.publishService(helloService, HelloService.class);
     }
 }

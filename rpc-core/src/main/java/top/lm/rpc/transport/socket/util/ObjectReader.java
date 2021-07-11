@@ -1,4 +1,4 @@
-package top.lm.rpc.util;
+package top.lm.rpc.transport.socket.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

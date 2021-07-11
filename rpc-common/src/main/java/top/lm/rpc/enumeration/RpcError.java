@@ -20,7 +20,9 @@ public enum RpcError {
     UNKNOWN_PACKAGE_TYPE("不识别的数据包类型"),
     SERIALIZER_NOT_FOUND("找不到序列化器"),
     RESPONSE_NOT_MATCHED("响应和请求号不匹配"),
-    CLIENT_CONNECTION_FAILURE("客户端连接失败");
+    CLIENT_CONNECTION_FAILURE("客户端连接失败"),
+    SERVICE_REGISTRY_CONNECTION_FAILURE("连接注册中心失败"),
+    REGISTER_SERVICE_FAILED("注册服务失败");
 
     private final String message;
 

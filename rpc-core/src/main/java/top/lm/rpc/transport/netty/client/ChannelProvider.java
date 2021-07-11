@@ -1,4 +1,4 @@
-package top.lm.rpc.netty.client;
+package top.lm.rpc.transport.netty.client;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -28,7 +28,7 @@ public class ChannelProvider {
     private static final Logger logger = LoggerFactory.getLogger(ChannelProvider.class);
 
     private static EventLoopGroup eventLoopGroup;
-    private static final Bootstrap bootstrap = initializeBootstrap();
+    private static Bootstrap bootstrap = initializeBootstrap();
     private static final int MAX_RETRY_COUNT = 5;
     private static Channel channel           = null;
     private static int orderTime             = 1;

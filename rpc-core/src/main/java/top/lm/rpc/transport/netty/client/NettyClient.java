@@ -1,23 +1,20 @@
-package top.lm.rpc.netty.client;
+package top.lm.rpc.transport.netty.client;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.AttributeKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import top.lm.rpc.RpcClient;
-import top.lm.rpc.codec.CommonDecoder;
-import top.lm.rpc.codec.CommonEncoder;
+import top.lm.rpc.registry.NacosServiceRegistry;
+import top.lm.rpc.registry.ServiceRegistry;
+import top.lm.rpc.transport.RpcClient;
 import top.lm.rpc.entity.RpcRequest;
 import top.lm.rpc.entity.RpcResponse;
 import top.lm.rpc.enumeration.RpcError;
 import top.lm.rpc.exception.RpcException;
 import top.lm.rpc.serializer.CommonSerializer;
-import top.lm.rpc.serializer.JsonSerializer;
-import top.lm.rpc.serializer.KryoSerializer;
 import top.lm.rpc.util.RpcMessageChecker;
 
 import java.net.InetSocketAddress;
@@ -32,9 +29,7 @@ public class NettyClient implements RpcClient {
 
     private static final Logger logger = LoggerFactory.getLogger(NettyClient.class);
     private static final Bootstrap bootstrap;
-
-    private String host;
-    private int port;
+    private final ServiceRegistry serviceRegistry;
 
     private CommonSerializer serializer;
 
@@ -46,9 +41,8 @@ public class NettyClient implements RpcClient {
                  .option(ChannelOption.SO_KEEPALIVE, true);
     }
 
-    public NettyClient(String host, int port) {
-        this.host = host;
-        this.port = port;
+    public NettyClient() {
+        this.serviceRegistry = new NacosServiceRegistry();
     }
 
     @Override
@@ -60,12 +54,13 @@ public class NettyClient implements RpcClient {
 
         AtomicReference<Object> result = new AtomicReference<>(null);
         try {
-            Channel channel = ChannelProvider.get(new InetSocketAddress(host, port), serializer);
+            InetSocketAddress inetSocketAddress = serviceRegistry.lookupService(rpcRequest.getInterfaceName());
+            Channel channel = ChannelProvider.get(inetSocketAddress, serializer);
 
             if (channel.isActive()) {
                 channel.writeAndFlush(rpcRequest).addListener(f -> {
                     if (f.isSuccess()) {
-                        logger.info(String.format("客户端发送信息: %s", rpcRequest.toString()));
+                        logger.info("客户端发送信息: {}", rpcRequest);
                     } else {
                         logger.error("发送消息时有错误发生: ", f.cause());
                     }

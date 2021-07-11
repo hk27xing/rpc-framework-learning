@@ -1,4 +1,4 @@
-package top.lm.rpc.netty.client;
+package top.lm.rpc.transport.netty.client;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

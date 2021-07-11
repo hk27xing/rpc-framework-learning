@@ -1,4 +1,4 @@
-package top.lm.rpc;
+package top.lm.rpc.transport;
 
 import top.lm.rpc.serializer.CommonSerializer;
 
@@ -8,8 +8,10 @@ import top.lm.rpc.serializer.CommonSerializer;
  * */
 public interface RpcServer {
 
-    void start(int port);
+    void start();
 
     void setSerializer(CommonSerializer serializer);
+
+    <T> void publishService(Object service, Class<T> serviceClass);
 
 }

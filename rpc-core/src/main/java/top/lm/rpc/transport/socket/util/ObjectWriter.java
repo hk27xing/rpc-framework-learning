@@ -1,4 +1,4 @@
-package top.lm.rpc.util;
+package top.lm.rpc.transport.socket.util;
 
 import top.lm.rpc.entity.RpcRequest;
 import top.lm.rpc.enumeration.PackageType;

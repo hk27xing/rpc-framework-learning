@@ -1,4 +1,4 @@
-package top.lm.rpc;
+package top.lm.rpc.transport;
 
 import top.lm.rpc.entity.RpcRequest;
 import top.lm.rpc.serializer.CommonSerializer;

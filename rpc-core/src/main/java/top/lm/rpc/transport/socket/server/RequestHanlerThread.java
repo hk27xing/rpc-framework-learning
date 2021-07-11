@@ -1,14 +1,14 @@
-package top.lm.rpc.socket.server;
+package top.lm.rpc.transport.socket.server;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import top.lm.rpc.RequestHandler;
+import top.lm.rpc.handler.RequestHandler;
 import top.lm.rpc.entity.RpcRequest;
 import top.lm.rpc.entity.RpcResponse;
 import top.lm.rpc.registry.ServiceRegistry;
 import top.lm.rpc.serializer.CommonSerializer;
-import top.lm.rpc.util.ObjectReader;
-import top.lm.rpc.util.ObjectWriter;
+import top.lm.rpc.transport.socket.util.ObjectReader;
+import top.lm.rpc.transport.socket.util.ObjectWriter;
 
 import java.io.*;
 import java.net.Socket;
@@ -43,8 +43,7 @@ public class RequestHanlerThread implements Runnable {
              OutputStream outputStream = socket.getOutputStream()) {
             RpcRequest rpcRequest = (RpcRequest) ObjectReader.readObject(inputStream);
             String interfaceName  = rpcRequest.getInterfaceName();
-            Object service        = serviceRegistry.getService(interfaceName);
-            Object result         = requestHandler.handle(rpcRequest, service);
+            Object result         = requestHandler.handle(rpcRequest);
 
             RpcResponse<Object> response = RpcResponse.success(result, rpcRequest.getRequestId());
             ObjectWriter.writeObject(outputStream, response, serializer);
