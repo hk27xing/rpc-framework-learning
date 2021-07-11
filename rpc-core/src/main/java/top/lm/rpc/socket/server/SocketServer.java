@@ -8,6 +8,7 @@ import top.lm.rpc.enumeration.RpcError;
 import top.lm.rpc.exception.RpcException;
 import top.lm.rpc.registry.ServiceRegistry;
 import top.lm.rpc.serializer.CommonSerializer;
+import top.lm.rpc.util.ThreadPoolFactory;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -22,26 +23,14 @@ public class SocketServer implements RpcServer {
 
     private static final Logger logger = LoggerFactory.getLogger(SocketServer.class);
 
-    private static final int CORE_POOL_SIZE          = 5;
-    private static final int MAXMUM_POOL_SIZE        = 50;
-    private static final int KEEP_ALIVE_TIME         = 60;
-    private static final int BLOCKING_QUEUE_CAPACITY = 100;
     private final ExecutorService threadPool;
     private final ServiceRegistry serviceRegistry;
     private final RequestHandler requestHandler = new RequestHandler();
     private CommonSerializer serializer;
 
     public SocketServer(ServiceRegistry serviceRegistry) {
-        this.serviceRegistry                 = serviceRegistry;
-
-        BlockingQueue<Runnable> workingQueue = new ArrayBlockingQueue<>(BLOCKING_QUEUE_CAPACITY);
-        ThreadFactory threadFactory          = Executors.defaultThreadFactory();
-        threadPool = new ThreadPoolExecutor(CORE_POOL_SIZE,
-                                            MAXMUM_POOL_SIZE,
-                                            KEEP_ALIVE_TIME,
-                                            TimeUnit.SECONDS,
-                                            workingQueue,
-                                            threadFactory);
+        this.serviceRegistry = serviceRegistry;
+        threadPool = ThreadPoolFactory.createDefaultThreadPool("socket-rpc-server");
     }
 
     @Override

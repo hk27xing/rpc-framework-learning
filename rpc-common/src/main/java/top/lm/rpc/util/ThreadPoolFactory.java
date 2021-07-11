@@ -14,7 +14,7 @@ public class ThreadPoolFactory {
     /* 线程池参数 */
     private static final int CORE_POOL_SIZE = 10;
     private static final int MAXIMUM_POOL_SIZE = 100;
-    private static final int KEEP_ALIVE_TIME = 1;
+    private static final int KEEP_ALIVE_TIME = 60;
     private static final int BLOCKING_QUEUE_CAPACITY = 100;
 
     private ThreadPoolFactory() {}
@@ -29,7 +29,7 @@ public class ThreadPoolFactory {
         return new ThreadPoolExecutor(CORE_POOL_SIZE,
                                       MAXIMUM_POOL_SIZE,
                                       KEEP_ALIVE_TIME,
-                                      TimeUnit.MINUTES,
+                                      TimeUnit.SECONDS,
                                       workQueue,
                                       threadFactory);
     }
