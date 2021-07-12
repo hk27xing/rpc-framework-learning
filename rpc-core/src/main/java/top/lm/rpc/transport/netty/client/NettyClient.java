@@ -7,7 +7,9 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.AttributeKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.lm.rpc.registry.NacosServiceDiscovery;
 import top.lm.rpc.registry.NacosServiceRegistry;
+import top.lm.rpc.registry.ServiceDiscovery;
 import top.lm.rpc.registry.ServiceRegistry;
 import top.lm.rpc.transport.RpcClient;
 import top.lm.rpc.entity.RpcRequest;
@@ -29,7 +31,7 @@ public class NettyClient implements RpcClient {
 
     private static final Logger logger = LoggerFactory.getLogger(NettyClient.class);
     private static final Bootstrap bootstrap;
-    private final ServiceRegistry serviceRegistry;
+    private final ServiceDiscovery serviceDiscovery;
 
     private CommonSerializer serializer;
 
@@ -42,7 +44,7 @@ public class NettyClient implements RpcClient {
     }
 
     public NettyClient() {
-        this.serviceRegistry = new NacosServiceRegistry();
+        this.serviceDiscovery = new NacosServiceDiscovery();
     }
 
     @Override
@@ -54,7 +56,7 @@ public class NettyClient implements RpcClient {
 
         AtomicReference<Object> result = new AtomicReference<>(null);
         try {
-            InetSocketAddress inetSocketAddress = serviceRegistry.lookupService(rpcRequest.getInterfaceName());
+            InetSocketAddress inetSocketAddress = serviceDiscovery.lookupService(rpcRequest.getInterfaceName());
             Channel channel = ChannelProvider.get(inetSocketAddress, serializer);
 
             if (channel.isActive()) {
@@ -73,6 +75,7 @@ public class NettyClient implements RpcClient {
                 RpcMessageChecker.check(rpcRequest, rpcResponse);
                 result.set(rpcResponse.getData());
             } else {
+                channel.close();
                 System.exit(0);
             }
         } catch (InterruptedException e) {

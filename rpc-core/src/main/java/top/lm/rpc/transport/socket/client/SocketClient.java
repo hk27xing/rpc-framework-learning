@@ -2,7 +2,9 @@ package top.lm.rpc.transport.socket.client;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.lm.rpc.registry.NacosServiceDiscovery;
 import top.lm.rpc.registry.NacosServiceRegistry;
+import top.lm.rpc.registry.ServiceDiscovery;
 import top.lm.rpc.registry.ServiceRegistry;
 import top.lm.rpc.transport.RpcClient;
 import top.lm.rpc.entity.RpcRequest;
@@ -27,12 +29,12 @@ public class SocketClient implements RpcClient {
 
     private static final Logger logger = LoggerFactory.getLogger(SocketClient.class);
 
-    private final ServiceRegistry serviceRegistry;
+    private final ServiceDiscovery serviceDiscovery;
 
     private CommonSerializer serializer;
 
     public SocketClient() {
-        this.serviceRegistry = new NacosServiceRegistry();
+        this.serviceDiscovery = new NacosServiceDiscovery();
     }
 
     @Override
@@ -46,7 +48,7 @@ public class SocketClient implements RpcClient {
             throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
         }
 
-        InetSocketAddress inetSocketAddress = serviceRegistry.lookupService(rpcRequest.getInterfaceName());
+        InetSocketAddress inetSocketAddress = serviceDiscovery.lookupService(rpcRequest.getInterfaceName());
         try (Socket socket = new Socket()) {
             socket.connect(inetSocketAddress);
             OutputStream outputStream = socket.getOutputStream();

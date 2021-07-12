@@ -2,8 +2,6 @@ package top.lm.test;
 
 import top.lm.rpc.api.HelloService;
 import top.lm.rpc.transport.netty.server.NettyServer;
-import top.lm.rpc.provider.ServiceProviderImpl;
-import top.lm.rpc.registry.ServiceRegistry;
 import top.lm.rpc.serializer.ProtobufSerializer;
 
 /**
@@ -13,7 +11,7 @@ import top.lm.rpc.serializer.ProtobufSerializer;
  */
 public class NettyTestServer {
     public static void main(String[] args) {
-        HelloService helloService = new HelloServerImpl();
+        HelloService helloService = new HelloServiceImpl();
         NettyServer server = new NettyServer("127.0.0.1", 9999);
         server.setSerializer(new ProtobufSerializer());
         server.publishService(helloService, HelloService.class);

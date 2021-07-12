@@ -1,8 +1,6 @@
 package top.lm.test;
 
 import top.lm.rpc.api.HelloService;
-import top.lm.rpc.provider.ServiceProviderImpl;
-import top.lm.rpc.registry.ServiceRegistry;
 import top.lm.rpc.serializer.KryoSerializer;
 import top.lm.rpc.transport.socket.server.SocketServer;
 
@@ -12,7 +10,7 @@ import top.lm.rpc.transport.socket.server.SocketServer;
  * */
 public class SocketTestServer {
     public static void main(String[] args) {
-        HelloService helloService       = new HelloServerImpl();
+        HelloService helloService       = new HelloServiceImpl2();
         SocketServer socketServer = new SocketServer("127.0.0.1", 9998);
         socketServer.setSerializer(new KryoSerializer());
         socketServer.publishService(helloService, HelloService.class);

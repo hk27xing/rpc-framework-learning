@@ -9,14 +9,14 @@ import top.lm.rpc.api.HelloService;
  * @Description HelloService 接口的实现类
  * @author hk27xing
  * */
-public class HelloServerImpl implements HelloService {
+public class HelloServiceImpl implements HelloService {
 
-    private static final Logger logger = LoggerFactory.getLogger(HelloServerImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(HelloServiceImpl.class);
 
     @Override
     public String hello(HelloObject object) {
         logger.info("接收到: {}", object.getMessage());
-        return "这是调用的返回值: id = " + object.getId();
+        return "本次处理来自Netty传输";
     }
 
 }
