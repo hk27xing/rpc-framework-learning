@@ -9,7 +9,7 @@ import java.util.concurrent.ExecutorService;
 
 /**
  * @author hk27xing
- * @Description **
+ * @Description 在服务端关闭之前自动向 Nacos 注销服务的钩子
  * @createTime 2021/7/13 15:56
  */
 public class ShutdownHook {
@@ -28,7 +28,7 @@ public class ShutdownHook {
         logger.info("关闭后将自动注销所有服务");
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             NacosUtil.clearRegistry();
-            threadPool.shutdown();
+            ThreadPoolFactory.shutDownAll();
         }));
     }
 

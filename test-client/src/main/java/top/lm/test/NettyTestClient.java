@@ -1,11 +1,10 @@
 package top.lm.test;
 
-import top.lm.rpc.transport.RpcClient;
-import top.lm.rpc.transport.RpcClientProxy;
 import top.lm.rpc.api.HelloObject;
 import top.lm.rpc.api.HelloService;
+import top.lm.rpc.transport.RpcClient;
+import top.lm.rpc.transport.RpcClientProxy;
 import top.lm.rpc.transport.netty.client.NettyClient;
-import top.lm.rpc.serializer.ProtobufSerializer;
 
 /**
  * @author hk27xing
@@ -15,7 +14,6 @@ import top.lm.rpc.serializer.ProtobufSerializer;
 public class NettyTestClient {
     public static void main(String[] args) {
         RpcClient client              = new NettyClient();
-        client.setSerializer(new ProtobufSerializer());
 
         RpcClientProxy rpcClientProxy = new RpcClientProxy(client);
         HelloService helloService     = rpcClientProxy.getProxy(HelloService.class);
