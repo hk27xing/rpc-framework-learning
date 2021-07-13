@@ -3,6 +3,7 @@ package top.lm.rpc.transport.socket.server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.lm.rpc.handler.RequestHandler;
+import top.lm.rpc.hook.ShutdownHook;
 import top.lm.rpc.provider.ServiceProvider;
 import top.lm.rpc.provider.ServiceProviderImpl;
 import top.lm.rpc.registry.NacosServiceRegistry;
@@ -11,7 +12,7 @@ import top.lm.rpc.enumeration.RpcError;
 import top.lm.rpc.exception.RpcException;
 import top.lm.rpc.registry.ServiceRegistry;
 import top.lm.rpc.serializer.CommonSerializer;
-import top.lm.rpc.util.ThreadPoolFactory;
+import top.lm.rpc.factory.ThreadPoolFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -59,12 +60,14 @@ public class SocketServer implements RpcServer {
 
     @Override
     public void start() {
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
+        try (ServerSocket serverSocket = new ServerSocket()) {
+            serverSocket.bind(new InetSocketAddress(host, port));
             logger.info("服务器启动...");
+            ShutdownHook.getShutdownHook().addClearAllHook();
             Socket socket;
             while ((socket = serverSocket.accept()) != null) {
                 logger.info("客户端连接: {}:{}", socket.getInetAddress(), socket.getLocalPort());
-                threadPool.execute(new RequestHanlerThread(socket, requestHandler, serviceRegistry, serializer));
+                threadPool.execute(new SocketRequestHanlerThread(socket, requestHandler, serializer));
             }
             threadPool.shutdown();
         } catch (IOException e) {

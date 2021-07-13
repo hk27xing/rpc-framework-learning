@@ -9,6 +9,7 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.lm.rpc.hook.ShutdownHook;
 import top.lm.rpc.provider.ServiceProvider;
 import top.lm.rpc.provider.ServiceProviderImpl;
 import top.lm.rpc.registry.NacosServiceRegistry;
@@ -82,6 +83,7 @@ public class NettyServer implements RpcServer {
                            });
 
             ChannelFuture future = serverBootstrap.bind(host, port).sync();
+            ShutdownHook.getShutdownHook().addClearAllHook();
             future.channel().closeFuture().sync();
         } catch (InterruptedException e) {
             logger.error("启动服务器时有错误发生: ", e);

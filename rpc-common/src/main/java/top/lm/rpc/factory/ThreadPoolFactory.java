@@ -1,4 +1,4 @@
-package top.lm.rpc.util;
+package top.lm.rpc.factory;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
