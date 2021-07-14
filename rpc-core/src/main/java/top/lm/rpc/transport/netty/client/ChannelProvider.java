@@ -5,6 +5,7 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.timeout.IdleStateHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.lm.rpc.codec.CommonDecoder;
@@ -54,6 +55,7 @@ public class ChannelProvider {
                 /* 自定义序列化编解码器 */
                 /* RpcResponse -> ByteBuf */
                 socketChannel.pipeline().addLast(new CommonEncoder(serializer))
+                                        .addLast(new IdleStateHandler(0, 5, 0, TimeUnit.SECONDS))
                                         .addLast(new CommonDecoder())
                                         .addLast(new NettyClientHandler());
             }

@@ -30,4 +30,7 @@ public class RpcRequest implements Serializable {
     /* 调用方法参数类型 */
     private Class<?>[] paramTypes;
 
+    /* 是否是心跳包, 及时检测是否断线的一种机制 */
+    private Boolean heartBeat;
+
 }
