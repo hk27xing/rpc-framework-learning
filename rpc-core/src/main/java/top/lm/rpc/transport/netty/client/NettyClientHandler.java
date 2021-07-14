@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.lm.rpc.entity.RpcRequest;
 import top.lm.rpc.entity.RpcResponse;
+import top.lm.rpc.factory.SingletonFactory;
 import top.lm.rpc.serializer.CommonSerializer;
 
 import java.net.InetSocketAddress;
@@ -25,16 +26,18 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<RpcResponse>
 
     private static final Logger logger = LoggerFactory.getLogger(NettyClientHandler.class);
 
+    private final UnprocessedRequests unprocessedRequests;
+
+    public NettyClientHandler() {
+        this.unprocessedRequests = SingletonFactory.getInstance(UnprocessedRequests.class);
+    }
+
     @Override
     protected void channelRead0(ChannelHandlerContext cxt,
                                 RpcResponse rpcResponse) throws Exception {
         try {
             logger.info(String.format("客户端接收到消息: %s", rpcResponse));
-
-            /* 将 rpcResponse 以 key 放入 ChannelHandlerContext 中, 这里就可以立刻获得结果并返回 */
-            AttributeKey<RpcResponse> key = AttributeKey.valueOf("rpcResponse" + rpcResponse.getRequestId());
-            cxt.channel().attr(key).set(rpcResponse);
-            cxt.channel().close();
+            unprocessedRequests.complete(rpcResponse);
         } finally {
             ReferenceCountUtil.release(rpcResponse);
         }
