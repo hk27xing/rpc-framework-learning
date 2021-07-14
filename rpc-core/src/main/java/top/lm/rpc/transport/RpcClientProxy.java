@@ -6,6 +6,7 @@ import top.lm.rpc.entity.RpcRequest;
 import top.lm.rpc.entity.RpcResponse;
 import top.lm.rpc.transport.netty.client.NettyClient;
 import top.lm.rpc.transport.socket.client.SocketClient;
+import top.lm.rpc.util.RpcMessageChecker;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -44,11 +45,11 @@ public class RpcClientProxy implements InvocationHandler {
                                                method.getParameterTypes(),
                                      false);
 
-        Object result = null;
+        RpcResponse rpcResponse = null;
         if (client instanceof NettyClient) {
             CompletableFuture<RpcResponse> completableFuture = (CompletableFuture<RpcResponse>) client.sendRequest(rpcRequest);
             try {
-                result = completableFuture.get().getData();
+                rpcResponse = completableFuture.get();
             } catch (InterruptedException | ExecutionException e) {
                 logger.error("方法调用请求发送失败", e);
                 return null;
@@ -56,11 +57,11 @@ public class RpcClientProxy implements InvocationHandler {
         }
 
         if (client instanceof SocketClient) {
-            RpcResponse rpcResponse = (RpcResponse) client.sendRequest(rpcRequest);
-            result = rpcResponse.getData();
+            rpcResponse = (RpcResponse) client.sendRequest(rpcRequest);
         }
 
-        return result;
+        RpcMessageChecker.check(rpcRequest, rpcResponse);
+        return rpcResponse.getData();
     }
 
 }

@@ -8,6 +8,8 @@ import io.netty.util.AttributeKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.lm.rpc.factory.SingletonFactory;
+import top.lm.rpc.loadbalancer.LoadBalancer;
+import top.lm.rpc.loadbalancer.RandomLoadBalancer;
 import top.lm.rpc.registry.NacosServiceDiscovery;
 import top.lm.rpc.registry.NacosServiceRegistry;
 import top.lm.rpc.registry.ServiceDiscovery;
@@ -48,11 +50,19 @@ public class NettyClient implements RpcClient {
     private final UnprocessedRequests unprocessedRequests;
 
     public NettyClient() {
-        this(DEFAULT_SERIALIZER);
+        this(DEFAULT_SERIALIZER, new RandomLoadBalancer());
+    }
+
+    public NettyClient(LoadBalancer loadBalancer) {
+        this(DEFAULT_SERIALIZER, loadBalancer);
     }
 
     public NettyClient(Integer serializer) {
-        this.serviceDiscovery = new NacosServiceDiscovery();
+        this(serializer, new RandomLoadBalancer());
+    }
+
+    public NettyClient(Integer serializer, LoadBalancer loadBalancer) {
+        this.serviceDiscovery = new NacosServiceDiscovery(loadBalancer);
         this.serializer = CommonSerializer.getByCode(serializer);
         this.unprocessedRequests = SingletonFactory.getInstance(UnprocessedRequests.class);
     }
