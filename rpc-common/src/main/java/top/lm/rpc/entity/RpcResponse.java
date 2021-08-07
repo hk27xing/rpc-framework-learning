@@ -17,13 +17,13 @@ public class RpcResponse<T> implements Serializable {
     /* 请求号 */
     private String requestId;
 
-    /* 相应状态码 */
+    /* 响应状态码 */
     private Integer statusCode;
 
-    /* 相应状态补充信息 */
+    /* 响应状态补充信息 */
     private String message;
 
-    /* 相应数据 */
+    /* 响应数据 */
     private T data;
 
     public static <T> RpcResponse<T> success(T data, String requestId) {
